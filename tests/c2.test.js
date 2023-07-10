@@ -1,0 +1,82 @@
+import webdriver  from 'selenium-webdriver';
+import { Capabilities } from 'selenium-webdriver/lib/capabilities.js';
+import {constants} from "../resources/resources.js";
+import {LoginPage} from "../page_object/login-page.js";
+import {BasePage} from "../page_object/base-page.js";
+import {DuplicateSettingsPage} from "../page_object/duplicate-setting-page.js";
+import {ConfigurationPage} from "../page_object/configuration-page.js";
+import {CreateArticlePage} from "../page_object/create-article-page.js";
+
+const capabilities = Capabilities.chrome();
+capabilities.set('marionette', true);
+
+let driver;
+let loginPage;
+let basePage;
+let duplicateSettingsPage;
+let configurationPage;
+let createArticlePage;
+
+it('Test C2', async() => {
+    await loginPage.setUsername(constants.login);
+    await loginPage.setPassword(constants.password);
+    await loginPage.clickLoginButton();
+    await basePage.getToUrl(constants.adSettingsLink);
+    await duplicateSettingsPage.setMessage(constants.empty);
+    await duplicateSettingsPage.setDisableFormCheckbox(constants.isNotChecked);
+    await duplicateSettingsPage.verifySuccessfullyInfoText();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isNotChecked);
+    await basePage.refreshPage();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isNotChecked);
+    await basePage.getToUrl(constants.configLink);
+    await configurationPage.clickDuplicateSettingsTab();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isNotChecked);
+    await basePage.getToUrl(constants.createArticleLink);
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isAvailable);
+    await createArticlePage.fillTitleField(constants.testName);
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyRelatedContentArticle(constants.test);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isAvailable);
+    await basePage.getToUrl(constants.adSettingsLink);
+    await duplicateSettingsPage.setDisableFormCheckbox(constants.isChecked);
+    await duplicateSettingsPage.verifySuccessfullyInfoText();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isChecked);
+    await basePage.refreshPage();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isChecked);
+    await basePage.getToUrl(constants.configLink);
+    await configurationPage.clickDuplicateSettingsTab();
+    await duplicateSettingsPage.verifyDisableFormCheckbox(constants.isChecked);
+    await basePage.getToUrl(constants.createArticleLink);
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isAvailable);
+    await createArticlePage.fillTitleField(constants.anything);
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyPresentDuplicates(false);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isAvailable);
+    await createArticlePage.verifyPresentNotDuplicateButton(false);
+    await createArticlePage.fillTitleField(constants.test);
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyPresentDuplicates(true);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isNotAvailable);
+    await createArticlePage.verifyPresentNotDuplicateButton(true);
+    await createArticlePage.clickNotDuplicateButton();
+    await createArticlePage.verifyRelatedContentMessageText(constants.defaultMessageText);
+    await createArticlePage.verifyPresentDuplicates(true);
+    await createArticlePage.verifyAvailableSubmitButton(constants.isAvailable);
+    await createArticlePage.verifyPresentNotDuplicateButton(false);
+
+}).timeout(25000);
+before(async() => {
+    driver = await new webdriver.Builder().withCapabilities(capabilities).build();
+    await driver.manage().window().maximize();
+    loginPage = new LoginPage(driver);
+    basePage = new BasePage(driver);
+    duplicateSettingsPage = new DuplicateSettingsPage(driver);
+    configurationPage = new ConfigurationPage(driver);
+    createArticlePage = new CreateArticlePage(driver);
+    await basePage.getToUrl(constants.loginLink);
+});
+after(async() => {
+    await driver.quit();
+});
