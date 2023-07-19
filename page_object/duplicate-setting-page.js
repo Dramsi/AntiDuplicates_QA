@@ -13,7 +13,7 @@ export class DuplicateSettingsPage {
         await this.driver.findElement(locators.settingPage.submitButton).click();
     }
     async setDisableFormCheckbox(expectedCheckStatus) {
-        let actualCheckStatus = await this.driver.findElement(locators.settingPage.disableFormCheckbox).getAttribute(constants.checked);
+        const actualCheckStatus = await this.driver.findElement(locators.settingPage.disableFormCheckbox).getAttribute(constants.checked);
         if (expectedCheckStatus !== actualCheckStatus)
         {
             await this.driver.findElement(locators.settingPage.disableFormCheckbox).click();
@@ -21,15 +21,15 @@ export class DuplicateSettingsPage {
         }
     }
     async verifyMessage(message) {
-        let messageField = await this.driver.findElement(locators.settingPage.messageField).getText();
+        const messageField = await this.driver.findElement(locators.settingPage.messageField).getText();
         assert.equal(messageField, message, "Verify text in (Message) field.");
     }
     async verifySuccessfullyInfoText() {
-        let statusInfoText = await this.driver.findElement(locators.settingPage.statusInfoText).getText();
+        const statusInfoText = await this.driver.findElement(locators.settingPage.statusInfoText).getText();
         assert.equal(statusInfoText, constants.successfully, "Verify successfully info message");
     }
     async verifyDisableFormCheckbox(expectedCheckStatus) {
-        let actualCheckStatus = await this.driver.findElement(locators.settingPage.disableFormCheckbox).getAttribute(constants.checked);
+        const actualCheckStatus = await this.driver.findElement(locators.settingPage.disableFormCheckbox).getAttribute(constants.checked);
         assert.equal(actualCheckStatus, expectedCheckStatus, "Verify status (Disable form submission) checkbox");
     }
 }

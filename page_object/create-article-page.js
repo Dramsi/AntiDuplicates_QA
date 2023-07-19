@@ -17,15 +17,15 @@ export class CreateArticlePage {
         await this.driver.findElement(locators.createArticlePage.notDuplicateButton).click();
     }
     async verifyRelatedContentMessageText(message) {
-        let textContent = await this.driver.findElement(locators.createArticlePage.relatedContentMessageText).getText();
+        const textContent = await this.driver.findElement(locators.createArticlePage.relatedContentMessageText).getText();
         assert.equal(textContent, message, "Verify message in Related Content.");
     }
     async verifyRelatedContentArticle(duplicateArticleName) {
-        let actualArticleName = await this.driver.findElement(locators.createArticlePage.relatedContentArticle).getText();
+        const actualArticleName = await this.driver.findElement(locators.createArticlePage.relatedContentArticle).getText();
         assert.isTrue(actualArticleName.contains(duplicateArticleName), "Verify duplicate article in Related Content.");
     }
     async verifyPresentDuplicates(expected) {
-        let duplicateElement = this.basePage.isElementPresent(this.driver, locators.createArticlePage.relatedContentArticle);
+        const duplicateElement = this.basePage.isElementPresent(this.driver, locators.createArticlePage.relatedContentArticle);
         if (expected) {
             assert.isTrue(duplicateElement, "Verify presence of duplicates in Related Content.");
         }
@@ -34,7 +34,7 @@ export class CreateArticlePage {
         }
     }
     async verifyPresentNotDuplicateButton(expected) {
-        let actual = this.basePage.isElementPresent(this.driver, locators.createArticlePage.notDuplicateButton);
+        const actual = this.basePage.isElementPresent(this.driver, locators.createArticlePage.notDuplicateButton);
         if (expected) {
             assert.isTrue(actual, "Verify presence (not a duplicate) button.");
         }
@@ -43,7 +43,7 @@ export class CreateArticlePage {
         }
     }
     async verifyAvailableSubmitButton(expectedStatus) {
-        let actualStatus = await this.driver.findElement(locators.createArticlePage.submitButton).getAttribute(constants.disabled);
+        const actualStatus = await this.driver.findElement(locators.createArticlePage.submitButton).getAttribute(constants.disabled);
         assert.equal(actualStatus, expectedStatus, "Verify available (Submit) button.");
     }
 }
